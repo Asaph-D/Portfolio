@@ -1,0 +1,54 @@
+# Activer le moteur de réécriture d'URL
+RewriteEngine On
+
+# Forcer la redirection vers HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Empêcher l'accès direct à certains fichiers sensibles
+<FilesMatch "\.(env|htaccess|htpasswd|ini|log|sh|bak|sql|yml)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Empêcher l'affichage de l'index des répertoires
+Options -Indexes
+
+# Limiter l'accès aux fichiers PHP au répertoire local
+<FilesMatch "\.php$">
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+</FilesMatch>
+
+# Redirection des pages d'erreur vers des pages personnalisées
+ErrorDocument 404 /erreurs/404.html
+ErrorDocument 403 /erreurs/403.html
+ErrorDocument 500 /erreurs/500.html
+
+# Activer la compression Gzip pour améliorer la vitesse de chargement
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript
+</IfModule>
+
+# Protéger le site contre le hotlinking (l'utilisation de vos ressources sur d'autres sites)
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^https://(www\.)?votresite\.com/ [NC]
+RewriteRule \.(jpg|jpeg|png|gif)$ - [F,NC,L]
+
+# Protection par mot de passe pour un répertoire particulier (par exemple, /admin)
+<Directory "/chemin/vers/admin">
+    AuthType Basic
+    AuthName "Zone protégée"
+    AuthUserFile /chemin/vers/.htpasswd
+    Require valid-user
+</Directory>
+
+# Limiter le taux de requêtes pour éviter les abus
+<IfModule mod_ratelimit.c>
+    SetEnvIf Request_URI "^/api" RATE_LIMIT
+    <Location "/api">
+        SetOutputFilter RATE_LIMIT
+        SetEnv rate-limit 10
+    </Location>
+</IfModule>

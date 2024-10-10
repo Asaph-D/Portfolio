@@ -1,0 +1,45 @@
+# 1. Désactiver l'affichage du contenu des répertoires
+Options -Indexes
+
+# 2. Protection par mot de passe pour certains répertoires
+# Remplacez "votre_repertoire" par le nom du répertoire que vous souhaitez protéger
+<Directory "C:/Users/PC/Documents/Programs/CV/Mr_Kouokam_Asaph/Portfolio">
+    AuthType Basic
+    AuthName "Accès Restreint"
+    AuthUserFile "C:/Users/PC/Documents/Programs/CV/Mr_Kouokam_Asaph/Portfolio/.htpasswd"
+    Require valid-user
+</Directory>
+
+# 3. Interdire l'accès à certains types de fichiers sensibles
+<FilesMatch "\.(env|config\.php|sql|html|bak|sh)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# 4. Protection contre le listage des fichiers .htaccess
+<Files ".ht*">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# 5. Rediriger les utilisateurs non autorisés
+# Par exemple, rediriger vers une page d'erreur
+ErrorDocument 403 /error403.html
+ErrorDocument 404 /error404.html
+
+# 6. Protection contre les attaques XSS et autres vulnérabilités
+# Empêcher l'exécution de scripts sur le serveur
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self'; object-src 'none';"
+</IfModule>
+
+# 7. Réécriture d'URL (si nécessaire)
+# Exemple : Redirection vers HTTPS (si SSL est disponible)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
