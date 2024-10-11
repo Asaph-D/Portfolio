@@ -17,10 +17,10 @@ Options -Indexes
 </FilesMatch>
 
 # 4. Protection contre le listage des fichiers .htaccess
-<Files ".ht*">
-    Order allow,deny
-    Deny from all
+<Files "send_email.php">
+    Require all granted
 </Files>
+
 
 # 5. Rediriger les utilisateurs non autorisés
 # Par exemple, rediriger vers une page d'erreur
