@@ -189,6 +189,18 @@
             pointer-events: none;
         }
 
+        /* Rain Effect */
+        .rain-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
         /* Glow effect on scroll */
         .section-glow {
             position: absolute;
@@ -282,7 +294,10 @@
 
     <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center justify-center pt-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <!-- Rain Effect Canvas -->
+        <canvas id="rainCanvas" class="rain-canvas"></canvas>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <!-- Left side: Text content -->
                 <div class="text-left">
@@ -346,11 +361,14 @@
             </div>
 
             <!-- Scroll Indicator -->
-            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-fade-in delay-500">
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-fade-in delay-500 z-10">
                 <div class="w-6 h-10 border border-white/30 rounded-full flex justify-center">
                     <div class="w-1 h-3 bg-white rounded-full mt-2 animate-bounce"></div>
                 </div>
             </div>
+
+            <!-- Rain Effect Canvas -->
+            <canvas id="rainCanvas" class="rain-canvas"></canvas>
         </div>
     </section>
 
@@ -916,6 +934,208 @@
                 observer.observe(el);
             }
         });
+
+        // Rain Effect with Splashes
+        (function() {
+            const canvas = document.getElementById('rainCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d', { alpha: true });
+            if (!ctx) return;
+
+            const heroSection = document.querySelector('section.relative.min-h-screen');
+            if (!heroSection) return;
+
+            let animationId = null;
+            let resizeTimeout = null;
+
+            // Rain drop class
+            class RainDrop {
+                constructor(startY = 0) {
+                    this.reset(startY);
+                }
+
+                reset(startY = 0) {
+                    const width = canvas.width / (window.devicePixelRatio || 1);
+                    this.x = Math.random() * width;
+                    this.y = startY;
+                    this.length = Math.random() * 25 + 15;
+                    this.speed = Math.random() * 4 + 3;
+                    this.opacity = Math.random() * 0.4 + 0.4;
+                }
+
+                update() {
+                    const height = canvas.height / (window.devicePixelRatio || 1);
+                    const header = document.querySelector('header');
+                    const headerHeight = header ? header.offsetHeight : 80;
+                    this.y += this.speed;
+
+                    // If drop reaches bottom, create splash and reset
+                    if (this.y > height - 5) {
+                        this.createSplash();
+                        this.reset(headerHeight + Math.random() * 50);
+                    }
+                }
+
+                createSplash() {
+                    const height = canvas.height / (window.devicePixelRatio || 1);
+                    // Create splash particles in a circular pattern
+                    const splashCount = 6;
+                    for (let i = 0; i < splashCount; i++) {
+                        const angle = (Math.PI * 2 / splashCount) * i + (Math.random() - 0.5) * 0.5;
+                        const speed = Math.random() * 2.5 + 1.5;
+                        splashes.push({
+                            x: this.x,
+                            y: height,
+                            vx: Math.cos(angle) * speed,
+                            vy: -Math.abs(Math.sin(angle) * speed * 2.5),
+                            life: 1.0,
+                            decay: Math.random() * 0.03 + 0.015,
+                            size: Math.random() * 2 + 1
+                        });
+                    }
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(this.x, this.y + this.length);
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+
+            // Splash particles
+            const splashes = [];
+            const rainDrops = [];
+            const dropCount = 15; // Reduced to 15 drops
+
+            function getHeaderHeight() {
+                const header = document.querySelector('header');
+                return header ? header.offsetHeight : 80;
+            }
+
+            function setupCanvas() {
+                const dpr = window.devicePixelRatio || 1;
+                const rect = heroSection.getBoundingClientRect();
+
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                canvas.style.width = `${rect.width}px`;
+                canvas.style.height = `${rect.height}px`;
+
+                ctx.scale(dpr, dpr);
+            }
+
+            function init() {
+                setupCanvas();
+                
+                const headerHeight = getHeaderHeight();
+                const width = canvas.width / (window.devicePixelRatio || 1);
+                
+                // Create rain drops starting just below header
+                for (let i = 0; i < dropCount; i++) {
+                    const drop = new RainDrop(headerHeight + Math.random() * 50);
+                    rainDrops.push(drop);
+                }
+            }
+
+            function update() {
+                // Update rain drops
+                rainDrops.forEach(drop => drop.update());
+
+                // Update splashes
+                for (let i = splashes.length - 1; i >= 0; i--) {
+                    const splash = splashes[i];
+                    splash.x += splash.vx;
+                    splash.y += splash.vy;
+                    splash.vy += 0.2; // Gravity
+                    splash.life -= splash.decay;
+
+                    if (splash.life <= 0 || splash.y > canvas.height / (window.devicePixelRatio || 1)) {
+                        splashes.splice(i, 1);
+                    }
+                }
+            }
+
+            function draw() {
+                const width = canvas.width / (window.devicePixelRatio || 1);
+                const height = canvas.height / (window.devicePixelRatio || 1);
+
+                // Clear with slight fade for trail effect
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, width, height);
+
+                // Draw rain drops
+                rainDrops.forEach(drop => drop.draw());
+
+                // Draw splashes with better visual effect
+                splashes.forEach(splash => {
+                    // Draw main splash particle
+                    ctx.beginPath();
+                    ctx.arc(splash.x, splash.y, splash.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${splash.life * 0.8})`;
+                    ctx.fill();
+                    
+                    // Add glow effect for more visible splashes
+                    if (splash.life > 0.5) {
+                        ctx.beginPath();
+                        ctx.arc(splash.x, splash.y, splash.size * 1.5, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(255, 255, 255, ${(splash.life - 0.5) * 0.3})`;
+                        ctx.fill();
+                    }
+                });
+            }
+
+            function animate() {
+                animationId = requestAnimationFrame(animate);
+                update();
+                draw();
+            }
+
+            function handleResize() {
+                if (resizeTimeout) {
+                    clearTimeout(resizeTimeout);
+                }
+
+                resizeTimeout = window.setTimeout(() => {
+                    setupCanvas();
+                    // Reset drops to fit new canvas size
+                    rainDrops.forEach(drop => {
+                        if (drop.x > canvas.width / (window.devicePixelRatio || 1)) {
+                            drop.x = Math.random() * canvas.width / (window.devicePixelRatio || 1);
+                        }
+                    });
+                }, 250);
+            }
+
+            function stopAnimation() {
+                if (animationId !== null) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+            }
+
+            // Initialize
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    init();
+                    animate();
+                });
+            } else {
+                init();
+                animate();
+            }
+
+            window.addEventListener('resize', handleResize);
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+                stopAnimation();
+                window.removeEventListener('resize', handleResize);
+            });
+        })();
 
         // Scroll-synced Journey Particles (for About section)
         (function() {
