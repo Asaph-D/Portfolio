@@ -1,352 +1,446 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kouokam Talla Eugene Asaph - Développeur Full Stack</title>
+    <title>Kouokam Talla Eugene Asaph - Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="assets/adportfolio_icon.ico.png" type="image/x-icon">
     <style>
-        :root {
-            --primary: #3b82f6;
-            --secondary: #1e40af;
-            --dark: #1e293b;
-            --light: #f8fafc;
+        /* Fade In Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        .delay-100 { animation-delay: 0.1s; opacity: 0; }
+        .delay-200 { animation-delay: 0.2s; opacity: 0; }
+        .delay-300 { animation-delay: 0.3s; opacity: 0; }
+        .delay-400 { animation-delay: 0.4s; opacity: 0; }
+        .delay-500 { animation-delay: 0.5s; opacity: 0; }
+        
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Shimmer Effect */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 3s infinite;
+        }
+        
+        /* Card Hover Effect */
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Project Card Effect */
+        .project-card {
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: left 0.5s;
+        }
+        .project-card:hover::before {
+            left: 100%;
+        }
+        .project-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+        
+        /* Stats Counter Animation */
+        @keyframes countUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .stat-number {
+            animation: countUp 0.6s ease-out;
         }
         
         html {
             scroll-behavior: smooth;
         }
         
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--light);
-            color: var(--dark);
-            overflow-x: hidden;
+        /* Particles Canvas for Projects Section */
+        .projects-particles-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.3;
         }
-        
-        /* Animation classes */
-        .fade-in {
-            animation: fadeIn 1s ease-in-out;
+
+        /* Animated Grid Background (Railway style) */
+        .animated-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.15;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
         }
-        
-        .slide-up {
-            animation: slideUp 0.8s ease-out;
-        }
-        
-        .scale-in {
-            animation: scaleIn 0.6s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideUp {
-            from { 
-                opacity: 0;
-                transform: translateY(50px);
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
             }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes scaleIn {
-            from { 
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to { 
-                opacity: 1;
-                transform: scale(1);
+            100% {
+                transform: translate(50px, 50px);
             }
         }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+
+        /* Gradient Orbs Background */
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: floatOrb 20s ease-in-out infinite;
+            pointer-events: none;
         }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+
+        @keyframes floatOrb {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(30px, -30px) scale(1.1);
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
         }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-        
-        /* Hamburger menu */
-        .hamburger {
-            display: none;
-            cursor: pointer;
-            z-index: 100;
-        }
-        
-        .bar {
-            display: block;
-            width: 25px;
-            height: 3px;
-            margin: 5px auto;
-            transition: all 0.3s ease;
-            background-color: var(--light);
-        }
-        
-        .hamburger.active .bar:nth-child(2) {
-            opacity: 0;
-        }
-        
-        .hamburger.active .bar:nth-child(1) {
-            transform: translateY(8px) rotate(45deg);
-        }
-        
-        .hamburger.active .bar:nth-child(3) {
-            transform: translateY(-8px) rotate(-45deg);
-        }
-        
-        /* Gradient text */
-        .gradient-text {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        /* Project card hover effect */
-        .project-card {
-            transition: all 0.3s ease;
-            transform-style: preserve-3d;
-        }
-        
-        .project-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        
-        /* Skill bar animation */
-        .skill-bar {
-            height: 8px;
-            border-radius: 4px;
-            background-color: #e2e8f0;
+
+
+        /* Scroll-synced background effects */
+        .scroll-synced-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
             overflow: hidden;
         }
-        
-        .skill-progress {
+
+        /* Animated particles for journey section */
+        .journey-particles {
+            position: absolute;
+            width: 100%;
             height: 100%;
-            border-radius: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transition: width 1.5s ease-out;
+            z-index: 1;
+            pointer-events: none;
         }
-        
-        /* Floating animation */
-        .floating {
-            animation: floating 3s ease-in-out infinite;
+
+        /* Glow effect on scroll */
+        .section-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
         }
-        
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+
+        .section-glow.active {
+            opacity: 1;
         }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .hamburger {
-                display: block;
+
+        /* Animated gradient background */
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
             }
-            
-            nav ul {
-                position: fixed;
-                left: -100%;
-                top: 0;
-                flex-direction: column;
-                background-color: var(--dark);
-                width: 100%;
-                height: 100vh;
-                text-align: center;
-                transition: 0.3s;
-                padding-top: 80px;
-                z-index: 99;
+            50% {
+                background-position: 100% 50%;
             }
-            
-            nav ul.active {
-                left: 0;
-            }
-            
-            .hero-content {
-                text-align: center;
-            }
-            
-            .hero-image {
-                margin: 0 auto;
+            100% {
+                background-position: 0% 50%;
             }
         }
+
+        .animated-gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: #000000;
+            opacity: 1;
+        }
+
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
-    <!-- Navigation -->
-    <header class="bg-slate-900 text-white shadow-lg fixed w-full z-50">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold gradient-text">Eugene Asaph</a>
-            
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+<body class="min-h-screen bg-black text-white relative">
+    <!-- Animated Gradient Background -->
+    <div class="animated-gradient-bg"></div>
+
+    <!-- Animated Grid Background -->
+    <div class="animated-grid"></div>
+
+    <!-- Gradient Orbs -->
+    <div class="gradient-orb bg-gray-900" style="width: 400px; height: 400px; top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="gradient-orb bg-black" style="width: 300px; height: 300px; top: 60%; right: 15%; animation-delay: 5s;"></div>
+    <div class="gradient-orb bg-gray-900" style="width: 350px; height: 350px; bottom: 20%; left: 50%; animation-delay: 10s;"></div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 transition-all duration-300" id="header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-white text-black flex items-center justify-center text-xl font-bold">
+                        EA
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-light tracking-wider">EUGENE ASAPH</h1>
+                        <p class="text-xs text-gray-400 tracking-widest">DÉVELOPPEUR FULL STACK</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <button onclick="scrollToSection('about')"
+                            class="text-sm tracking-wide hover:text-gray-300 transition-colors">
+                        À PROPOS
+                    </button>
+                    <button onclick="scrollToSection('projects')"
+                            class="text-sm tracking-wide hover:text-gray-300 transition-colors">
+                        PROJETS
+                    </button>
+                    <button onclick="scrollToSection('skills')"
+                            class="text-sm tracking-wide hover:text-gray-300 transition-colors">
+                        COMPÉTENCES
+                    </button>
+                    <button onclick="scrollToSection('contact')"
+                            class="bg-white text-black px-6 py-2 text-sm font-medium hover:bg-gray-200 transition-all">
+                        CONTACT
+                    </button>
+                </nav>
             </div>
-            
-            <nav>
-                <ul class="flex space-x-8">
-                    <li><a href="#home" class="hover:text-blue-400 transition duration-300 nav-link">Accueil</a></li>
-                    <li><a href="#about" class="hover:text-blue-400 transition duration-300 nav-link">À propos</a></li>
-                    <li><a href="#projects" class="hover:text-blue-400 transition duration-300 nav-link">Projets</a></li>
-                    <li><a href="#skills" class="hover:text-blue-400 transition duration-300 nav-link">Compétences</a></li>
-                    <li><a href="#contact" class="hover:text-blue-400 transition duration-300 nav-link">Contact</a></li>
-                </ul>
-            </nav>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="pt-32 pb-20 px-6 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
-        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
-            <div class="hero-content md:w-1/2 mb-10 md:mb-0 slide-up">
-                <h1 class="text-4xl md:text-6xl font-bold mb-4">Kouokam Talla <span class="gradient-text">Eugene Asaph</span></h1>
-                <p class="text-xl md:text-2xl mb-6">Étudiant en Informatique - Développeur Full Stack</p>
-                <div class="flex space-x-4">
-                    <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 transform hover:scale-105">
-                        Me contacter
-                    </a>    
-                    <a href="#projects" class="border border-blue-400 text-blue-400 hover:bg-blue-900 hover:bg-opacity-30 px-6 py-3 rounded-lg font-medium transition duration-300 transform hover:scale-105">
-                        Voir mes projets
-                    </a>
-                </div>
-                <div class="mt-8 flex space-x-4">
-                    <a href="#" class="text-white hover:text-blue-400 text-2xl transition duration-300">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="#" class="text-white hover:text-blue-400 text-2xl transition duration-300">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="#" class="text-white hover:text-blue-400 text-2xl transition duration-300">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                </div>
-            </div>
-            
-            <div class="hero-image md:w-1/2 flex justify-center scale-in">
-                <div class="relative">
-                    <div class="absolute -inset-4 bg-blue-500 rounded-full opacity-20 blur-lg"></div>
-                    <img class="relative w-64 h-64 md:w-80 md:h-80 rounded-full object-cover border-4 border-blue-500 shadow-xl floating" src="assets/photo asaph_1.jpg" alt="Kouokam Talla Eugene Asaph">
-                </div>
-            </div>
-        </div>
-    </section>
+    <section class="relative min-h-screen flex items-center justify-center pt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Left side: Text content -->
+                <div class="text-left">
+                    <div class="animate-fade-in delay-100">
+                        <p class="text-sm tracking-[0.3em] text-gray-400 mb-8 uppercase">
+                            Développeur Full Stack
+                        </p>
+                    </div>
 
-    <!-- Profile Section -->
-    <section id="profile" class="py-16 px-6 bg-white">
-        <div class="container mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-12 fade-in">Profil Professionnel</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-slate-50 p-8 rounded-xl shadow-lg slide-up">
-                    <h3 class="text-2xl font-semibold mb-4 text-blue-600">Informations Personnelles</h3>
-                    <ul class="space-y-3">
-                        <li class="flex items-start">
-                            <i class="fas fa-user mt-1 mr-3 text-blue-500"></i>
-                            <span><strong>Nom :</strong> Kouokam Talla Eugene Asaph</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-flag mt-1 mr-3 text-blue-500"></i>
-                            <span><strong>Nationalité :</strong> Camerounaise</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-birthday-cake mt-1 mr-3 text-blue-500"></i>
-                            <span><strong>Date de naissance :</strong> 12/09/2002 à Bafoussam</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-heart mt-1 mr-3 text-blue-500"></i>
-                            <span><strong>État civil :</strong> Célibataire</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-blue-500"></i>
-                            <span><strong>Adresse :</strong> Ouest - Cameroun</span>
-                        </li>
-                    </ul>
+                    <h2 class="text-5xl md:text-7xl font-light mb-8 leading-tight animate-fade-in delay-200">
+                        Kouokam Talla<br>
+                        <span class="font-light">Eugene Asaph</span>
+                    </h2>
+
+                    <p class="text-xl text-gray-400 mb-12 font-light animate-fade-in delay-300">
+                        Passionné par le développement web et mobile, je crée des solutions technologiques innovantes
+                        avec Angular, React, SpringBoot et les technologies modernes du web.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 animate-fade-in delay-400">
+                        <button
+                            onclick="scrollToSection('projects')"
+                            class="bg-white text-black px-8 py-4 text-sm font-medium tracking-wide hover:bg-gray-200 transition-all transform hover:scale-105">
+                            VOIR MES PROJETS
+                        </button>
+                        <button
+                            onclick="scrollToSection('contact')"
+                            class="border border-white/30 px-8 py-4 text-sm font-medium tracking-wide hover:bg-white/10 transition-all">
+                            ME CONTACTER
+                        </button>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="flex gap-6 mt-12 animate-fade-in delay-500">
+                        <a href="https://github.com/Asaph-D" target="_blank" 
+                           class="w-12 h-12 border border-white/30 rounded-full flex items-center justify-center hover:bg-white/10 transition-all">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/asaph-kouokam-02a47531b/" target="_blank"
+                           class="w-12 h-12 border border-white/30 rounded-full flex items-center justify-center hover:bg-white/10 transition-all">
+                            <i class="fab fa-linkedin-in text-xl"></i>
+                        </a>
+                        <a href="https://portfolio-rho-seven-87.vercel.app/" target="_blank"
+                           class="w-12 h-12 border border-white/30 rounded-full flex items-center justify-center hover:bg-white/10 transition-all">
+                            <i class="fas fa-globe text-xl"></i>
+                        </a>
+                    </div>
                 </div>
-                
-                <div class="bg-slate-50 p-8 rounded-xl shadow-lg slide-up">
-                    <h3 class="text-2xl font-semibold mb-4 text-blue-600">Contact</h3>
-                    <ul class="space-y-3">
-                        <li class="flex items-start">
-                            <i class="fas fa-phone mt-1 mr-3 text-blue-500"></i>
-                            <span><strong>Téléphone :</strong> +237 658 989 324, +237 671 090 834</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-envelope mt-1 mr-3 text-blue-500"></i>
-                            <span><strong>Email :</strong> <a href="mailto:kouokamasaph142@gmail.com" class="text-blue-600 hover:underline">kouokamasaph142@gmail.com</a></span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-globe mt-1 mr-3 text-blue-500"></i>
-                            <span><strong>Portfolio :</strong> <a href="https://portfolio-rho-seven-87.vercel.app/" class="text-blue-600 hover:underline">portfolio.vercel.app</a></span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fab fa-github mt-1 mr-3 text-blue-500"></i>
-                            <span><strong>GitHub :</strong> <a href="https://github.com/Asaph-D" class="text-blue-600 hover:underline">github.com-Asaph-D</a></span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fab fa-linkedin mt-1 mr-3 text-blue-500"></i>
-                            <span><strong>LinkedIn :</strong> <a href="https://www.linkedin.com/in/asaph-kouokam-02a47531b/" class="text-blue-600 hover:underline">asaph-kouokam-02a47531b</a></span>
-                        </li>
-                    </ul>
+
+                <!-- Right side: Image -->
+                <div class="flex justify-center md:justify-end animate-fade-in delay-200">
+                    <div class="relative inline-block">
+                        <div class="absolute -inset-4 bg-blue-500 rounded-full opacity-20 blur-xl"></div>
+                        <img 
+                            src="assets/photo_2025-12-08_09-42-13.jpg" 
+                            alt="Eugene Asaph" 
+                            class="relative w-64 h-64 md:w-80 md:h-80 rounded-full object-cover border-4 border-white/20 float-animation"
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-fade-in delay-500">
+                <div class="w-6 h-10 border border-white/30 rounded-full flex justify-center">
+                    <div class="w-1 h-3 bg-white rounded-full mt-2 animate-bounce"></div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-16 px-6 bg-slate-50">
-        <div class="container mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-12 fade-in">À propos de moi</h2>
-            
-            <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg slide-up">
-                <p class="text-lg mb-8 leading-relaxed">
-                    Passionné par le développement web et mobile, je suis un étudiant en informatique déterminé à créer des solutions technologiques innovantes. 
-                    Mon parcours académique et mes projets personnels m'ont permis d'acquérir des compétences solides en développement full stack.
+    <section id="about" class="py-32 relative z-10 overflow-hidden">
+        <!-- Scroll-synced background for journey section -->
+        <div class="scroll-synced-bg">
+            <canvas id="journeyParticlesCanvas" class="journey-particles"></canvas>
+            <div class="section-glow" id="aboutGlow"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-20">
+                <p class="text-sm tracking-[0.3em] text-gray-400 mb-4 uppercase">À propos</p>
+                <h3 class="text-4xl md:text-5xl font-light mb-6">
+                    Qui suis-je ?
+                </h3>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto font-light">
+                    Étudiant en informatique déterminé à créer des solutions technologiques innovantes
                 </p>
-                
-                <h3 class="text-2xl font-semibold mb-4 text-blue-600">Formation Académique</h3>
-                
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div class="space-y-6">
-                    <div class="border-l-4 border-blue-500 pl-6 py-2">
-                        <h4 class="text-xl font-medium">Licence 3 en Informatique à l'Université de Dschang (2023-2024)</h4>
-                        <ul class="list-disc pl-5 mt-2 space-y-1">
-                            <li>Contact avec les technologies Angular, SpringBoot, React, Ionic</li>
-                            <li>Création d'une application hybride pour portfolio de photographe</li>
-                            <li>Participation à des hackathons et compétitions de programmation</li>
+                    <div class="feature-card bg-white/5 backdrop-blur-sm p-8 border border-white/10">
+                        <div class="w-14 h-14 bg-white/10 flex items-center justify-center mb-6 text-2xl">
+                            🎓
+                        </div>
+                        <h4 class="text-xl font-light mb-4">Formation</h4>
+                        <p class="text-gray-400 font-light leading-relaxed mb-4">
+                            Licence 3 en Informatique à l'Université de Dschang (2023-2024)
+                        </p>
+                        <ul class="text-gray-400 text-sm space-y-2 font-light">
+                            <li>• Technologies Angular, SpringBoot, React, Ionic</li>
+                            <li>• Application hybride pour portfolio de photographe</li>
+                            <li>• Participation à des hackathons</li>
                         </ul>
                     </div>
                     
-                    <div class="border-l-4 border-blue-500 pl-6 py-2">
-                        <h4 class="text-xl font-medium">Licence 2 en Informatique à l'Université de Dschang (2022-2023)</h4>
-                        <ul class="list-disc pl-5 mt-2 space-y-1">
-                            <li>Découverte du Java, JavaScript, HTML, CSS et les frameworks Laravel et Bootstrap</li>
-                            <li>Création d'un premier site web pour vente de séries</li>
-                            <li>Initiation aux bases de données relationnelles</li>
+                    <div class="feature-card bg-white/5 backdrop-blur-sm p-8 border border-white/10">
+                        <div class="w-14 h-14 bg-white/10 flex items-center justify-center mb-6 text-2xl">
+                            💼
+                        </div>
+                        <h4 class="text-xl font-light mb-4">Informations Personnelles</h4>
+                        <ul class="text-gray-400 text-sm space-y-2 font-light">
+                            <li><strong class="text-white">Nationalité :</strong> Camerounaise</li>
+                            <li><strong class="text-white">Date de naissance :</strong> 12/09/2002 à Bafoussam</li>
+                            <li><strong class="text-white">État civil :</strong> Célibataire</li>
+                            <li><strong class="text-white">Localisation :</strong> Ouest - Cameroun</li>
                         </ul>
                     </div>
-                    
-                    <div class="border-l-4 border-blue-500 pl-6 py-2">
-                        <h4 class="text-xl font-medium">Licence 1 en Informatique à l'Université de Dschang (2021-2022)</h4>
-                        <ul class="list-disc pl-5 mt-2 space-y-1">
-                            <li>Fondamentaux de la programmation avec Python et C</li>
-                            <li>Concepts de base des systèmes d'information</li>
-                            <li>Mathématiques pour l'informatique</li>
-                        </ul>
+                </div>
+                
+                <div class="feature-card bg-white/5 backdrop-blur-sm p-8 border border-white/10">
+                    <div class="w-14 h-14 bg-white/10 flex items-center justify-center mb-6 text-2xl">
+                        🚀
+                    </div>
+                    <h4 class="text-xl font-light mb-4">Parcours</h4>
+                    <p class="text-gray-400 font-light leading-relaxed mb-6">
+                        Mon parcours académique et mes projets personnels m'ont permis d'acquérir des compétences solides 
+                        en développement full stack. Je me spécialise dans la création d'applications web et mobiles 
+                        modernes avec une attention particulière à l'expérience utilisateur.
+                    </p>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-300 text-sm">Développement Frontend</span>
+                                <span class="text-gray-400 text-xs">85%</span>
+                            </div>
+                            <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-300 text-sm">Développement Backend</span>
+                                <span class="text-gray-400 text-xs">75%</span>
+                            </div>
+                            <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-300 text-sm">Mobile Development</span>
+                                <span class="text-gray-400 text-xs">70%</span>
+                            </div>
+                            <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full" style="width: 70%"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -354,411 +448,369 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="py-16 px-6 bg-white">
-        <div class="container mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-4 fade-in">Mes Projets</h2>
-            <p class="text-center text-slate-600 mb-12 max-w-2xl mx-auto">Découvrez une sélection de mes réalisations les plus récentes et significatives</p>
+    <section id="projects" class="py-32 bg-white/5 relative z-10 overflow-hidden">
+        <!-- Particles Canvas for Projects Section -->
+        <canvas id="projectsParticlesCanvas" class="projects-particles-canvas"></canvas>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-20">
+                <p class="text-sm tracking-[0.3em] text-gray-400 mb-4 uppercase">Projets</p>
+                <h3 class="text-4xl md:text-5xl font-light mb-6">
+                    Mes Réalisations
+                </h3>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto font-light">
+                    Découvrez une sélection de mes projets les plus récents et significatifs
+                </p>
+            </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Project 1 -->
-                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl slide-up">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" 
+                <div class="project-card bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden cursor-pointer group">
+                    <div class="h-64 bg-white/10 relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1074&q=80" 
                              alt="Portfolio de Photographe" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                             class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-black/50 backdrop-blur-sm text-white px-3 py-1 text-xs tracking-wider">
+                                IONIC
+                            </span>
+                        </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">Portfolio de Photographe</h3>
-                        <p class="text-slate-600 mb-4">Une application hybride permettant aux photographes de présenter leurs œuvres, gérer leurs profils, et vendre leurs photos.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Ionic</span>
-                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Angular</span>
-                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Firebase</span>
+                        <h4 class="text-xl font-light mb-2">Portfolio de Photographe</h4>
+                        <p class="text-gray-400 text-sm mb-4 font-light">
+                            Application hybride permettant aux photographes de présenter leurs œuvres et vendre leurs photos.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex space-x-2">
+                                <span class="text-xs text-gray-400">Ionic</span>
+                                <span class="text-xs text-gray-400">Angular</span>
+                                <span class="text-xs text-gray-400">Firebase</span>
+                            </div>
+                            <a href="https://github.com/Asaph-D/UV_Projet" target="_blank" 
+                               class="text-sm tracking-wide group-hover:text-white transition-colors">
+                                VOIR →
+                            </a>
                         </div>
-                        <a href="https://github.com/Asaph-D/UV_Projet" class="text-blue-600 font-medium hover:underline flex items-center">
-                            Voir le projet <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
                     </div>
-                </div> 
+                </div>
 
                 <!-- Project 2 -->
-                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl slide-up">
-                    <div class="h-48 overflow-hidden">
-                        <img src="assets/cv-presentation.png"
-                            alt="Création de CV Professionnel"
-                            class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                <div class="project-card bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden cursor-pointer group">
+                    <div class="h-64 bg-white/10 relative overflow-hidden">
+                        <img src="assets/cv-presentation.png" 
+                             alt="Créateur de CV" 
+                             class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-black/50 backdrop-blur-sm text-white px-3 py-1 text-xs tracking-wider">
+                                ANGULAR
+                            </span>
+                        </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">Créateur de CV Professionnels</h3>
-                        <p class="text-slate-600 mb-4">Une application intuitive permettant aux utilisateurs de concevoir des CV modernes, de choisir parmi plusieurs modèles, et de les personnaliser avec des animations, des sections dynamiques et des aperçus en temps réel.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-yellow-100 text-blue-800 text-xs px-3 py-1 rounded-full">Tailwing</span>
-                            <span class="bg-yellow-100 text-blue-800 text-xs px-3 py-1 rounded-full">React</span>
-                            <span class="bg-yellow-100 text-blue-800 text-xs px-3 py-1 rounded-full">Express.js</span>
-                            <span class="bg-yellow-100 text-blue-800 text-xs px-3 py-1 rounded-full">PostgreSQL</span>
+                        <h4 class="text-xl font-light mb-2">Créateur de CV Professionnels</h4>
+                        <p class="text-gray-400 text-sm mb-4 font-light">
+                            Application intuitive pour concevoir des CV modernes avec plusieurs modèles personnalisables.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex space-x-2">
+                                <span class="text-xs text-gray-400">Angular</span>
+                                <span class="text-xs text-gray-400">Tailwind</span>
+                            </div>
+                            <a href="https://github.com/Asaph-D/MON_CV" target="_blank"
+                               class="text-sm tracking-wide group-hover:text-white transition-colors">
+                                VOIR →
+                            </a>
                         </div>
-                        <a href="https://github.com/Asaph-D/MON_CV" class="text-yellow-600 font-medium hover:underline flex items-center">
-                            Voir le projet <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
                     </div>
                 </div>
 
                 <!-- Project 3 -->
-                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl slide-up">
-                    <div class="h-48 overflow-hidden">
-                        <img src="assets/techlogo.png" 
-                             alt="Site de Pâtisserie" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                <div class="project-card bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden cursor-pointer group">
+                    <div class="h-64 bg-white/10 relative overflow-hidden">
+                        <img src="assets/2600_1300 Site web_Citadel_1.jpg" 
+                             alt="Assistant Santé IA" 
+                             class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-black/50 backdrop-blur-sm text-white px-3 py-1 text-xs tracking-wider">
+                                IA
+                            </span>
+                        </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">ProDanCake</h3>
-                        <p class="text-slate-600 mb-4">Dans notre atelier, chaque création est une ode à la gourmandise, alliant tradition Africaine et créativité contemporaine.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-pink-100 text-pink-800 text-xs px-3 py-1 rounded-full">React</span>
-                            <span class="bg-pink-100 text-pink-800 text-xs px-3 py-1 rounded-full">Spring</span>
-                            <span class="bg-pink-100 text-pink-800 text-xs px-3 py-1 rounded-full">FireBase</span>
+                        <h4 class="text-xl font-light mb-2">Assistant Santé Intelligent</h4>
+                        <p class="text-gray-400 text-sm mb-4 font-light">
+                            Application IA qui analyse les données vitales et propose des conseils personnalisés.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex space-x-2">
+                                <span class="text-xs text-gray-400">Node.js</span>
+                                <span class="text-xs text-gray-400">MongoDB</span>
+                            </div>
+                            <a href="https://assistantsante.vercel.app/" target="_blank"
+                               class="text-sm tracking-wide group-hover:text-white transition-colors">
+                                VOIR →
+                            </a>
                         </div>
-                        <a href="https://github.com/Asaph-D/Pro-Dan" class="text-pink-600 font-medium hover:underline flex items-center">
-                            Voir le projet <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
                     </div>
                 </div>
 
                 <!-- Project 4 -->
-                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl slide-up" style="animation-delay: 0.2s">
-                    <div class="h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" 
-                             alt="Site Web de Vente de Séries" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                <div class="project-card bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden cursor-pointer group">
+                    <div class="h-64 bg-white/10 relative overflow-hidden">
+                        <img src="assets/techlogo.png" 
+                             alt="ProDanCake" 
+                             class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-black/50 backdrop-blur-sm text-white px-3 py-1 text-xs tracking-wider">
+                                E-COMMERCE
+                            </span>
+                        </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">Site Web de Vente de Séries</h3>
-                        <p class="text-slate-600 mb-4">Un site web pour vendre des séries en ligne, avec des options de recherche avancée et des paniers d'achat.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Laravel</span>
-                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Bootstrap</span>
-                            <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">MySQL</span>
+                        <h4 class="text-xl font-light mb-2">ProDanCake</h4>
+                        <p class="text-gray-400 text-sm mb-4 font-light">
+                            Plateforme e-commerce pour une pâtisserie artisanale.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex space-x-2">
+                                <span class="text-xs text-gray-400">React</span>
+                                <span class="text-xs text-gray-400">Spring</span>
+                            </div>
+                            <a href="https://github.com/Asaph-D/Pro-Dan" target="_blank"
+                               class="text-sm tracking-wide group-hover:text-white transition-colors">
+                                VOIR →
+                            </a>
                         </div>
-                        <a href="https://streaming-two-sepia.vercel.app/" class="text-blue-600 font-medium hover:underline flex items-center">
-                            Voir le projet <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
                     </div>
                 </div>
 
                 <!-- Project 5 -->
-                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl slide-up">
-                    <div class="h-48 overflow-hidden">
-                        <img src="assets/2600_1300 Site web_Citadel_1.jpg" 
-                             alt="Assistant Santé IA" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                <div class="project-card bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden cursor-pointer group">
+                    <div class="h-64 bg-white/10 relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" 
+                             alt="Site de Vente de Séries" 
+                             class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-black/50 backdrop-blur-sm text-white px-3 py-1 text-xs tracking-wider">
+                                LARAVEL
+                            </span>
+                        </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">Assistant Santé Intelligent</h3>
-                        <p class="text-slate-600 mb-4">Une application innovante alimentée par l’IA qui analyse vos données vitales en temps réel, propose des conseils personnalisés, alerte en cas de risque et facilite le suivi à distance avec des professionnels de santé.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">IA</span>
-                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">Tailwing</span>
-                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">Node.js</span>
-                            <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">MongoDB</span>
+                        <h4 class="text-xl font-light mb-2">Site Web de Vente de Séries</h4>
+                        <p class="text-gray-400 text-sm mb-4 font-light">
+                            Site web pour vendre des séries en ligne avec recherche avancée et panier d'achat.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex space-x-2">
+                                <span class="text-xs text-gray-400">Laravel</span>
+                                <span class="text-xs text-gray-400">Bootstrap</span>
+                            </div>
+                            <a href="https://streaming-two-sepia.vercel.app/" target="_blank"
+                               class="text-sm tracking-wide group-hover:text-white transition-colors">
+                                VOIR →
+                            </a>
                         </div>
-                        <a href="https://assistantsante.vercel.app/" class="text-green-700 font-medium hover:underline flex items-center">
-                            Voir le projet <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
                     </div>
                 </div>
 
                 <!-- Project 6 -->
-                <div class="project-card bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl slide-up">
-                    <div class="h-48 overflow-hidden">
+                <div class="project-card bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden cursor-pointer group">
+                    <div class="h-64 bg-white/10 relative overflow-hidden">
                         <img src="assets/patisserie.jpg" 
-                             alt="Site de Pâtisserie" 
-                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                             alt="Abi's Cake" 
+                             class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-black/50 backdrop-blur-sm text-white px-3 py-1 text-xs tracking-wider">
+                                REACT
+                            </span>
+                        </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">Abi's Cake</h3>
-                        <p class="text-slate-600 mb-4">Une pâtisserie artisanale où la passion et le savoir-faire se marient délicieusement.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-pink-100 text-pink-800 text-xs px-3 py-1 rounded-full">React</span>
-                            <span class="bg-pink-100 text-pink-800 text-xs px-3 py-1 rounded-full">Site vitrine</span>
+                        <h4 class="text-xl font-light mb-2">Abi's Cake</h4>
+                        <p class="text-gray-400 text-sm mb-4 font-light">
+                            Site vitrine pour une pâtisserie artisanale.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex space-x-2">
+                                <span class="text-xs text-gray-400">React</span>
+                            </div>
+                            <a href="https://github.com/Asaph-D/abiscake" target="_blank"
+                               class="text-sm tracking-wide group-hover:text-white transition-colors">
+                                VOIR →
+                            </a>
                         </div>
-                        <a href="https://github.com/Asaph-D/abiscake" class="text-pink-600 font-medium hover:underline flex items-center">
-                            Voir le projet <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
                     </div>
-                </div>                 
-            </div>
-            
-            <div class="text-center mt-12 fade-in">
-                <a href="https://github.com/Asaph-D" class="inline-flex items-center px-6 py-3 border border-blue-600 text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition duration-300">
-                    Voir tous mes projets <i class="fas fa-arrow-right ml-2"></i>
-                </a>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Skills Section -->
-    <section id="skills" class="py-16 px-6 bg-slate-50">
-        <div class="container mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-12 fade-in">Mes Compétences</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
-                <!-- Technical Skills -->
-                <div class="bg-white p-8 rounded-xl shadow-lg slide-up">
-                    <h3 class="text-2xl font-semibold mb-6 text-blue-600 flex items-center">
-                        <i class="fas fa-code mr-3"></i> Compétences Techniques
-                    </h3>
-                    
-                    <div class="space-y-6">
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">HTML/CSS</span>
-                                <span>90%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 90%"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">JavaScript</span>
-                                <span>85%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 85%"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">React/Angular</span>
-                                <span>80%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 80%"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">Java/SpringBoot</span>
-                                <span>75%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 75%"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">Node.js/Express</span>
-                                <span>70%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 70%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Professional Skills -->
-                <div class="bg-white p-8 rounded-xl shadow-lg slide-up">
-                    <h3 class="text-2xl font-semibold mb-6 text-blue-600 flex items-center">
-                        <i class="fas fa-user-tie mr-3"></i> Compétences Professionnelles
-                    </h3>
-                    
-                    <div class="space-y-6">
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">Travail d'équipe</span>
-                                <span>95%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 95%"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">Communication</span>
-                                <span>90%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 90%"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">Résolution de problèmes</span>
-                                <span>85%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 85%"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">Gestion de projet</span>
-                                <span>80%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 80%"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">Créativité</span>
-                                <span>75%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 75%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <section id="skills" class="py-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <p class="text-sm tracking-[0.3em] text-gray-400 mb-4 uppercase">Compétences</p>
+                <h3 class="text-4xl md:text-5xl font-light mb-6">
+                    Technologies & Outils
+                </h3>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto font-light">
+                    Maîtrise des technologies modernes du développement web et mobile
+                </p>
             </div>
             
-            <!-- Tools & Technologies -->
-            <div class="mt-12 max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg slide-up">
-                <h3 class="text-2xl font-semibold mb-6 text-blue-600 flex items-center">
-                    <i class="fas fa-tools mr-3"></i> Outils & Technologies
-                </h3>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="feature-card bg-white/5 backdrop-blur-sm p-8 border border-white/10">
+                    <div class="w-14 h-14 bg-white/10 flex items-center justify-center mb-6 text-2xl">
+                        💻
+                    </div>
+                    <h4 class="text-xl font-light mb-4">Frontend</h4>
+                    <ul class="text-gray-400 font-light leading-relaxed space-y-2">
+                        <li>• HTML/CSS (90%)</li>
+                        <li>• JavaScript/TypeScript (85%)</li>
+                        <li>• React/Angular (80%)</li>
+                        <li>• Tailwind CSS</li>
+                        <li>• Bootstrap</li>
+                    </ul>
+                </div>
                 
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    <div class="flex items-center p-3 bg-slate-100 rounded-lg">
-                        <i class="fab fa-git-alt text-xl text-orange-600 mr-3"></i>
-                        <span>Git</span>
+                <div class="feature-card bg-white/5 backdrop-blur-sm p-8 border border-white/10">
+                    <div class="w-14 h-14 bg-white/10 flex items-center justify-center mb-6 text-2xl">
+                        ⚙️
                     </div>
-                    <div class="flex items-center p-3 bg-slate-100 rounded-lg">
-                        <i class="fab fa-docker text-xl text-blue-500 mr-3"></i>
-                        <span>Docker</span>
+                    <h4 class="text-xl font-light mb-4">Backend</h4>
+                    <ul class="text-gray-400 font-light leading-relaxed space-y-2">
+                        <li>• Java/SpringBoot (75%)</li>
+                        <li>• Node.js/Express (70%)</li>
+                        <li>• PHP/Laravel</li>
+                        <li>• RESTful APIs</li>
+                        <li>• Microservices</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card bg-white/5 backdrop-blur-sm p-8 border border-white/10">
+                    <div class="w-14 h-14 bg-white/10 flex items-center justify-center mb-6 text-2xl">
+                        🛠️
                     </div>
-                    <div class="flex items-center p-3 bg-slate-100 rounded-lg">
-                        <i class="fas fa-database text-xl text-blue-700 mr-3"></i>
-                        <span>MySQL</span>
-                    </div>
-                    <div class="flex items-center p-3 bg-slate-100 rounded-lg">
-                        <i class="fas fa-leaf text-xl text-green-600 mr-3"></i>
-                        <span>MongoDB</span>
-                    </div>
-                    <div class="flex items-center p-3 bg-slate-100 rounded-lg">
-                        <i class="fab fa-figma text-xl text-purple-600 mr-3"></i>
-                        <span>Figma</span>
-                    </div>
-                    <div class="flex items-center p-3 bg-slate-100 rounded-lg">
-                        <i class="fas fa-terminal text-xl text-gray-700 mr-3"></i>
-                        <span>Terminal</span>
-                    </div>
-                    <div class="flex items-center p-3 bg-slate-100 rounded-lg">
-                        <i class="fab fa-jenkins text-xl text-red-600 mr-3"></i>
-                        <span>Jenkins</span>
-                    </div>
-                    <div class="flex items-center p-3 bg-slate-100 rounded-lg">
-                        <i class="fab fa-aws text-xl text-orange-500 mr-3"></i>
-                        <span>AWS</span>
-                    </div>
+                    <h4 class="text-xl font-light mb-4">Outils & Autres</h4>
+                    <ul class="text-gray-400 font-light leading-relaxed space-y-2">
+                        <li>• Git/GitHub</li>
+                        <li>• Docker</li>
+                        <li>• MySQL/MongoDB</li>
+                        <li>• Firebase</li>
+                        <li>• Ionic (Mobile)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-32 border-t border-white/10 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12 text-center">
+                <div>
+                    <div class="text-5xl font-light mb-3 stat-number">6+</div>
+                    <div class="text-sm tracking-wider text-gray-400 uppercase">Projets réalisés</div>
+                </div>
+                <div>
+                    <div class="text-5xl font-light mb-3 stat-number">3</div>
+                    <div class="text-sm tracking-wider text-gray-400 uppercase">Années d'études</div>
+                </div>
+                <div>
+                    <div class="text-5xl font-light mb-3 stat-number">10+</div>
+                    <div class="text-sm tracking-wider text-gray-400 uppercase">Technologies</div>
+                </div>
+                <div>
+                    <div class="text-5xl font-light mb-3 stat-number">100%</div>
+                    <div class="text-sm tracking-wider text-gray-400 uppercase">Passion</div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-16 px-6 bg-white">
-        <div class="container mx-auto max-w-4xl">
-            <h2 class="text-3xl font-bold text-center mb-4 fade-in">Contactez-moi</h2>
-            <p class="text-center text-slate-600 mb-12">Disponible pour des opportunités de collaboration ou des projets freelance</p>
+    <section id="contact" class="py-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <p class="text-sm tracking-[0.3em] text-gray-400 mb-4 uppercase">Contact</p>
+                <h3 class="text-4xl md:text-5xl font-light mb-6">
+                    Travaillons ensemble
+                </h3>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto font-light">
+                    Disponible pour des opportunités de collaboration ou des projets freelance
+                </p>
+            </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div class="slide-up">
-                    <h3 class="text-xl font-semibold mb-4">Informations de contact</h3>
-                    <p class="mb-6">N'hésitez pas à me contacter pour discuter de projets, collaborations ou opportunités professionnelles.</p>
+            <div class="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+                <div class="space-y-6">
+                    <div class="feature-card bg-white/5 backdrop-blur-sm p-6 border border-white/10">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 bg-white/10 flex items-center justify-center">
+                                <i class="fas fa-envelope text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-light mb-1">Email</h4>
+                                <a href="mailto:kouokamasaph142@gmail.com" class="text-gray-400 hover:text-white transition-colors text-sm">
+                                    kouokamasaph142@gmail.com
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     
-                    <ul class="space-y-4">
-                        <li class="flex items-start">
-                            <div class="bg-blue-100 p-3 rounded-full mr-4">
-                                <i class="fas fa-map-marker-alt text-blue-600"></i>
+                    <div class="feature-card bg-white/5 backdrop-blur-sm p-6 border border-white/10">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 bg-white/10 flex items-center justify-center">
+                                <i class="fas fa-phone text-xl"></i>
                             </div>
                             <div>
-                                <h4 class="font-medium">Adresse</h4>
-                                <p class="text-slate-600">Ouest - Cameroun</p>
+                                <h4 class="font-light mb-1">Téléphone</h4>
+                                <a href="tel:+237658989324" class="text-gray-400 hover:text-white transition-colors text-sm">
+                                    +237 658 989 324
+                                </a>
                             </div>
-                        </li>
-                        <li class="flex items-start">
-                            <div class="bg-blue-100 p-3 rounded-full mr-4">
-                                <i class="fas fa-envelope text-blue-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium">Email</h4>
-                                <p class="text-slate-600">kouokamasaph142@gmail.com</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <div class="bg-blue-100 p-3 rounded-full mr-4">
-                                <i class="fas fa-phone text-blue-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-medium">Téléphone</h4>
-                                <p class="text-slate-600">+237 658 989 324</p>
-                            </div>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                     
-                    <div class="mt-8">
-                        <h4 class="font-medium mb-3">Suivez-moi</h4>
-                        <div class="flex space-x-4">
-                            <a href="#" class="bg-blue-100 p-3 rounded-full text-blue-600 hover:bg-blue-200 transition duration-300">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="bg-blue-100 p-3 rounded-full text-blue-600 hover:bg-blue-200 transition duration-300">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                            <a href="#" class="bg-blue-100 p-3 rounded-full text-blue-600 hover:bg-blue-200 transition duration-300">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="bg-blue-100 p-3 rounded-full text-blue-600 hover:bg-blue-200 transition duration-300">
-                                <i class="fab fa-instagram"></i>
-                            </a>
+                    <div class="feature-card bg-white/5 backdrop-blur-sm p-6 border border-white/10">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 bg-white/10 flex items-center justify-center">
+                                <i class="fas fa-map-marker-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-light mb-1">Localisation</h4>
+                                <p class="text-gray-400 text-sm">Ouest - Cameroun</p>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="slide-up" style="animation-delay: 0.2s">
-                    <form class="contact-form bg-slate-50 p-8 rounded-xl shadow-lg" action="https://formspree.io/f/mbljjjav" method="POST">
-                        <div class="mb-6">
-                            <label for="name" class="block text-sm font-medium text-slate-700 mb-2">Votre nom</label>
-                            <input type="text" id="name" name="name" 
-                                   class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300" 
-                                   placeholder="Entrez votre nom" required>
+                <div class="feature-card bg-white/5 backdrop-blur-sm p-8 border border-white/10">
+                    <form action="https://formspree.io/f/mbljjjav" method="POST" class="space-y-6">
+                        <div>
+                            <label class="block text-sm mb-2 text-gray-300">Nom</label>
+                            <input type="text" name="name" required
+                                   class="w-full bg-white/5 border border-white/10 px-4 py-3 focus:outline-none focus:border-white/30 transition-colors">
                         </div>
-                        
-                        <div class="mb-6">
-                            <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Votre email</label>
-                            <input type="email" id="email" name="email" 
-                                   class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300" 
-                                   placeholder="Entrez votre email" required>
+                        <div>
+                            <label class="block text-sm mb-2 text-gray-300">Email</label>
+                            <input type="email" name="email" required
+                                   class="w-full bg-white/5 border border-white/10 px-4 py-3 focus:outline-none focus:border-white/30 transition-colors">
                         </div>
-                        
-                        <div class="mb-6">
-                            <label for="subject" class="block text-sm font-medium text-slate-700 mb-2">Sujet</label>
-                            <input type="text" id="subject" name="subject" 
-                                   class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300" 
-                                   placeholder="Objet de votre message">
+                        <div>
+                            <label class="block text-sm mb-2 text-gray-300">Message</label>
+                            <textarea name="message" rows="5" required
+                                      class="w-full bg-white/5 border border-white/10 px-4 py-3 focus:outline-none focus:border-white/30 transition-colors resize-none"></textarea>
                         </div>
-                        
-                        <div class="mb-6">
-                            <label for="message" class="block text-sm font-medium text-slate-700 mb-2">Message</label>
-                            <textarea id="message" name="message" rows="4" 
-                                      class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300" 
-                                      placeholder="Votre message" required></textarea>
-                        </div>
-                        
-                        <button type="submit" 
-                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105">
-                            Envoyer le message <i class="fas fa-paper-plane ml-2"></i>
+                        <button type="submit"
+                                class="w-full bg-white text-black px-6 py-3 text-sm font-medium tracking-wide hover:bg-gray-200 transition-all">
+                            ENVOYER
                         </button>
                     </form>
                 </div>
@@ -767,141 +819,532 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-white py-8 px-6">
-        <div class="container mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <a href="#" class="text-2xl font-bold gradient-text">Eugene Asaph</a>
-                    <p class="mt-2 text-slate-400">Développeur Full Stack passionné par la création de solutions innovantes</p>
+    <footer class="border-t border-white/10 py-16 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-white text-black flex items-center justify-center text-sm font-bold">
+                            EA
+                        </div>
+                        <h5 class="font-light tracking-wider">EUGENE ASAPH</h5>
+                    </div>
+                    <p class="text-gray-400 text-sm font-light">
+                        Développeur Full Stack passionné par la création de solutions innovantes.
+                    </p>
                 </div>
-                
-                <div class="flex space-x-6">
-                    <a href="#" class="text-slate-400 hover:text-white transition duration-300">
-                        <i class="fab fa-github text-xl"></i>
-                    </a>
-                    <a href="#" class="text-slate-400 hover:text-white transition duration-300">
-                        <i class="fab fa-linkedin-in text-xl"></i>
-                    </a>
-                    <a href="#" class="text-slate-400 hover:text-white transition duration-300">
-                        <i class="fab fa-twitter text-xl"></i>
-                    </a>
-                    <a href="#" class="text-slate-400 hover:text-white transition duration-300">
-                        <i class="fab fa-instagram text-xl"></i>
-                    </a>
+                <div>
+                    <h5 class="font-light mb-4 tracking-wider">NAVIGATION</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#about" onclick="scrollToSection('about')" class="text-gray-400 hover:text-white transition-colors">À propos</a></li>
+                        <li><a href="#projects" onclick="scrollToSection('projects')" class="text-gray-400 hover:text-white transition-colors">Projets</a></li>
+                        <li><a href="#skills" onclick="scrollToSection('skills')" class="text-gray-400 hover:text-white transition-colors">Compétences</a></li>
+                        <li><a href="#contact" onclick="scrollToSection('contact')" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-light mb-4 tracking-wider">RÉSEAUX</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="https://github.com/Asaph-D" target="_blank" class="text-gray-400 hover:text-white transition-colors">GitHub</a></li>
+                        <li><a href="https://www.linkedin.com/in/asaph-kouokam-02a47531b/" target="_blank" class="text-gray-400 hover:text-white transition-colors">LinkedIn</a></li>
+                        <li><a href="https://portfolio-rho-seven-87.vercel.app/" target="_blank" class="text-gray-400 hover:text-white transition-colors">Portfolio</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-light mb-4 tracking-wider">CONTACT</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li class="text-gray-400">kouokamasaph142@gmail.com</li>
+                        <li class="text-gray-400">+237 658 989 324</li>
+                        <li class="text-gray-400">Ouest - Cameroun</li>
+                    </ul>
                 </div>
             </div>
-            
-            <div class="border-t border-slate-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-slate-400 mb-4 md:mb-0">&copy; 2024 Kouokam Talla Eugene Asaph. Tous droits réservés.</p>
-                
-                <div class="flex space-x-6">
-                    <a href="#home" class="text-slate-400 hover:text-white transition duration-300">Accueil</a>
-                    <a href="#about" class="text-slate-400 hover:text-white transition duration-300">À propos</a>
-                    <a href="#projects" class="text-slate-400 hover:text-white transition duration-300">Projets</a>
-                    <a href="#contact" class="text-slate-400 hover:text-white transition duration-300">Contact</a>
-                </div>
+            <div class="border-t border-white/10 mt-12 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2024 Kouokam Talla Eugene Asaph. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Back to Top Button -->
-    <button id="backToTop" class="fixed bottom-8 right-8 bg-blue-600 text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
     <script>
-        // Mobile menu toggle
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.querySelector('nav ul');
-        
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-        
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-            });
-        });
-        
-        // Back to top button
-        const backToTopButton = document.getElementById('backToTop');
-        
+        // Scroll Progress
         window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.remove('opacity-0', 'invisible');
-                backToTopButton.classList.add('opacity-100', 'visible');
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+            
+            // Header background on scroll
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('bg-black');
+                header.classList.add('backdrop-blur-lg');
+                header.classList.add('border-b');
+                header.classList.add('border-white/10');
             } else {
-                backToTopButton.classList.remove('opacity-100', 'visible');
-                backToTopButton.classList.add('opacity-0', 'invisible');
+                header.classList.remove('bg-black');
+                header.classList.remove('backdrop-blur-lg');
+                header.classList.remove('border-b');
+                header.classList.remove('border-white/10');
             }
         });
-        
-        backToTopButton.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-        
-        // Animate elements when scrolling
-        const animateOnScroll = () => {
-            const elements = document.querySelectorAll('.slide-up, .fade-in, .scale-in');
-            
-            elements.forEach(element => {
-                const elementPosition = element.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.2;
-                
-                if (elementPosition < screenPosition) {
-                    element.style.opacity = '1';
-                    element.style.transform = 'translateY(0) scale(1)';
+
+        // Smooth scroll to section
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Initialize animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
                 }
             });
-        };
-        
-        // Initialize elements as invisible
-        document.querySelectorAll('.slide-up').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(50px)';
-        });
-        
-        document.querySelectorAll('.fade-in').forEach(el => {
-            el.style.opacity = '0';
-        });
-        
-        document.querySelectorAll('.scale-in').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'scale(0.8)';
-        });
-        
-        window.addEventListener('load', animateOnScroll);
-        window.addEventListener('scroll', animateOnScroll);
-        
-        // Animate skill bars when they come into view
-        const animateSkillBars = () => {
-            const skillBars = document.querySelectorAll('.skill-progress');
-            const skillsSection = document.getElementById('skills');
-            const skillsPosition = skillsSection.getBoundingClientRect().top;
-            const screenPosition = window.innerHeight / 1.2;
-            
-            if (skillsPosition < screenPosition) {
-                skillBars.forEach(bar => {
-                    const width = bar.style.width;
-                    bar.style.width = '0';
-                    setTimeout(() => {
-                        bar.style.width = width;
-                    }, 100);
-                });
-                
-                // Remove the event listener after animation
-                window.removeEventListener('scroll', animateSkillBars);
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-fade-in').forEach(el => {
+            if (el.classList.contains('delay-100') || el.classList.contains('delay-200') || 
+                el.classList.contains('delay-300') || el.classList.contains('delay-400') || 
+                el.classList.contains('delay-500')) {
+                observer.observe(el);
             }
-        };
-        
-        window.addEventListener('scroll', animateSkillBars);
+        });
+
+        // Scroll-synced Journey Particles (for About section)
+        (function() {
+            const canvas = document.getElementById('journeyParticlesCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d', { alpha: true });
+            if (!ctx) return;
+
+            const aboutSection = document.getElementById('about');
+            if (!aboutSection) return;
+
+            const aboutGlow = document.getElementById('aboutGlow');
+            
+            // Configuration
+            const config = {
+                particleCount: 60,
+                particleSpeed: 0.3,
+                connectionDistance: 120,
+                fps: 60,
+                particleColor: 'rgba(255, 255, 255, 0.6)',
+                lineColor: 'rgba(255, 255, 255, 0.15)',
+                particleSize: { min: 2, max: 4 }
+            };
+
+            const particles = [];
+            let animationId = null;
+            let lastFrameTime = 0;
+            const frameInterval = 1000 / config.fps;
+            let resizeTimeout = null;
+            let scrollProgress = 0;
+
+            function setupCanvas() {
+                const dpr = window.devicePixelRatio || 1;
+                const rect = aboutSection.getBoundingClientRect();
+
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                canvas.style.width = `${rect.width}px`;
+                canvas.style.height = `${rect.height}px`;
+
+                ctx.scale(dpr, dpr);
+            }
+
+            function randomRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            function createParticles() {
+                particles.length = 0;
+                const width = canvas.width / (window.devicePixelRatio || 1);
+                const height = canvas.height / (window.devicePixelRatio || 1);
+
+                for (let i = 0; i < config.particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        vx: (Math.random() - 0.5) * config.particleSpeed,
+                        vy: (Math.random() - 0.5) * config.particleSpeed,
+                        radius: randomRange(config.particleSize.min, config.particleSize.max),
+                        opacity: randomRange(0.4, 1),
+                        baseSpeed: config.particleSpeed,
+                        angle: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+
+            function updateScrollProgress() {
+                const rect = aboutSection.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                const sectionTop = rect.top;
+                const sectionHeight = rect.height;
+                
+                // Calculate scroll progress (0 to 1)
+                if (sectionTop < windowHeight && sectionTop + sectionHeight > 0) {
+                    const visibleHeight = Math.min(windowHeight, sectionTop + sectionHeight) - Math.max(0, sectionTop);
+                    scrollProgress = Math.max(0, Math.min(1, visibleHeight / windowHeight));
+                    
+                    // More intense effect when section is centered
+                    const sectionCenter = sectionTop + sectionHeight / 2;
+                    const distanceFromCenter = Math.abs(windowHeight / 2 - sectionCenter);
+                    const centerIntensity = Math.max(0, 1 - distanceFromCenter / (windowHeight / 2));
+                    scrollProgress = Math.max(scrollProgress, centerIntensity * 0.8);
+                } else {
+                    scrollProgress = 0;
+                }
+
+                // Update glow opacity based on scroll
+                if (aboutGlow) {
+                    aboutGlow.style.opacity = scrollProgress * 0.8;
+                    if (scrollProgress > 0.1) {
+                        aboutGlow.classList.add('active');
+                    } else {
+                        aboutGlow.classList.remove('active');
+                    }
+                }
+            }
+
+            function update() {
+                const width = canvas.width / (window.devicePixelRatio || 1);
+                const height = canvas.height / (window.devicePixelRatio || 1);
+
+                // Update particle speed based on scroll progress
+                const speedMultiplier = 1 + scrollProgress * 2.5;
+                const intensity = scrollProgress;
+
+                particles.forEach((particle, index) => {
+                    // Update position with scroll-synced speed
+                    particle.x += particle.vx * speedMultiplier;
+                    particle.y += particle.vy * speedMultiplier;
+
+                    // Wrap around edges
+                    if (particle.x < 0) particle.x = width;
+                    if (particle.x > width) particle.x = 0;
+                    if (particle.y < 0) particle.y = height;
+                    if (particle.y > height) particle.y = 0;
+
+                    // Update opacity and size based on scroll
+                    particle.opacity = 0.3 + intensity * 0.7;
+                    particle.radius = config.particleSize.min + (config.particleSize.max - config.particleSize.min) * (0.5 + intensity * 0.5);
+                });
+            }
+
+            function draw() {
+                const width = canvas.width / (window.devicePixelRatio || 1);
+                const height = canvas.height / (window.devicePixelRatio || 1);
+
+                // Clear canvas
+                ctx.clearRect(0, 0, width, height);
+
+                // Draw connections with scroll-synced intensity
+                const connectionIntensity = scrollProgress;
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < config.connectionDistance) {
+                            const opacity = (1 - distance / config.connectionDistance) * connectionIntensity * 0.3;
+                            if (opacity > 0.01) {
+                                ctx.beginPath();
+                                ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                                ctx.lineWidth = 1.5;
+                                ctx.moveTo(particles[i].x, particles[i].y);
+                                ctx.lineTo(particles[j].x, particles[j].y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                }
+
+                // Draw particles with scroll-synced glow
+                const glowIntensity = scrollProgress;
+                particles.forEach(particle => {
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity * 0.6})`;
+                    
+                    // Add dynamic glow effect based on scroll
+                    if (glowIntensity > 0.1) {
+                        ctx.shadowBlur = 8 + glowIntensity * 15;
+                        ctx.shadowColor = `rgba(255, 255, 255, ${0.4 * glowIntensity})`;
+                    }
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                });
+            }
+
+            function animate(currentTime) {
+                animationId = requestAnimationFrame(animate);
+
+                const elapsed = currentTime - lastFrameTime;
+
+                if (elapsed < frameInterval) {
+                    return;
+                }
+
+                lastFrameTime = currentTime - (elapsed % frameInterval);
+
+                updateScrollProgress();
+                update();
+                draw();
+            }
+
+            function handleResize() {
+                if (resizeTimeout) {
+                    clearTimeout(resizeTimeout);
+                }
+
+                resizeTimeout = window.setTimeout(() => {
+                    setupCanvas();
+                    createParticles();
+                }, 250);
+            }
+
+            function stopAnimation() {
+                if (animationId !== null) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+            }
+
+            // Initialize
+            function init() {
+                setupCanvas();
+                createParticles();
+                animate(0);
+                window.addEventListener('resize', handleResize);
+                window.addEventListener('scroll', updateScrollProgress);
+
+                // Cleanup on page unload
+                window.addEventListener('beforeunload', () => {
+                    stopAnimation();
+                    window.removeEventListener('resize', handleResize);
+                    window.removeEventListener('scroll', updateScrollProgress);
+                });
+            }
+
+            // Start when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+
+        // Particles Animation for Projects Section
+        (function() {
+            const canvas = document.getElementById('projectsParticlesCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d', { alpha: true });
+            if (!ctx) return;
+
+            const projectsSection = document.getElementById('projects');
+            if (!projectsSection) return;
+
+            // Configuration
+            const config = {
+                particleCount: 40,
+                particleSpeed: 0.2,
+                connectionDistance: 0,
+                interactive: false,
+                fps: 30,
+                particleColor: 'rgba(255, 255, 255, 0.6)',
+                lineColor: 'rgba(59, 130, 246, 0.3)',
+                particleSize: { min: 1, max: 3 }
+            };
+
+            const particles = [];
+            let animationId = null;
+            let lastFrameTime = 0;
+            const frameInterval = 1000 / config.fps;
+            let resizeTimeout = null;
+
+            function setupCanvas() {
+                const dpr = window.devicePixelRatio || 1;
+                const rect = projectsSection.getBoundingClientRect();
+
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                canvas.style.width = `${rect.width}px`;
+                canvas.style.height = `${rect.height}px`;
+
+                ctx.scale(dpr, dpr);
+            }
+
+            function randomRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            function createParticles() {
+                particles.length = 0;
+                const width = canvas.width / (window.devicePixelRatio || 1);
+                const height = canvas.height / (window.devicePixelRatio || 1);
+
+                for (let i = 0; i < config.particleCount; i++) {
+                    const radius = randomRange(config.particleSize.min, config.particleSize.max);
+                    const opacity = randomRange(0.3, 0.8);
+
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        vx: (Math.random() - 0.5) * config.particleSpeed,
+                        vy: (Math.random() - 0.5) * config.particleSpeed,
+                        radius: radius,
+                        opacity: opacity,
+                        targetOpacity: opacity
+                    });
+                }
+            }
+
+            function update() {
+                const width = canvas.width / (window.devicePixelRatio || 1);
+                const height = canvas.height / (window.devicePixelRatio || 1);
+
+                particles.forEach(particle => {
+                    // Update position
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+
+                    // Bounce off edges
+                    if (particle.x < 0 || particle.x > width) {
+                        particle.vx *= -1;
+                        particle.x = Math.max(0, Math.min(width, particle.x));
+                    }
+                    if (particle.y < 0 || particle.y > height) {
+                        particle.vy *= -1;
+                        particle.y = Math.max(0, Math.min(height, particle.y));
+                    }
+
+                    // Smooth opacity transition
+                    if (particle.opacity < particle.targetOpacity) {
+                        particle.opacity += 0.02;
+                    } else if (particle.opacity > particle.targetOpacity) {
+                        particle.opacity -= 0.02;
+                    }
+
+                    // Limit speed
+                    const speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+                    const maxSpeed = config.particleSpeed * 2;
+                    if (speed > maxSpeed) {
+                        particle.vx = (particle.vx / speed) * maxSpeed;
+                        particle.vy = (particle.vy / speed) * maxSpeed;
+                    }
+                });
+            }
+
+            function draw() {
+                const width = canvas.width / (window.devicePixelRatio || 1);
+                const height = canvas.height / (window.devicePixelRatio || 1);
+
+                // Clear canvas with fade effect
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, width, height);
+
+                // Draw connections if connectionDistance > 0
+                if (config.connectionDistance > 0) {
+                    for (let i = 0; i < particles.length; i++) {
+                        for (let j = i + 1; j < particles.length; j++) {
+                            const dx = particles[i].x - particles[j].x;
+                            const dy = particles[i].y - particles[j].y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+
+                            if (distance < config.connectionDistance) {
+                                const opacity = 1 - (distance / config.connectionDistance);
+                                ctx.beginPath();
+                                ctx.strokeStyle = config.lineColor.replace(/[\d.]+\)$/g, `${opacity * 0.3})`);
+                                ctx.lineWidth = 0.5;
+                                ctx.moveTo(particles[i].x, particles[i].y);
+                                ctx.lineTo(particles[j].x, particles[j].y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                }
+
+                // Draw particles
+                particles.forEach(particle => {
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = config.particleColor.replace(/[\d.]+\)$/g, `${particle.opacity})`);
+                    ctx.fill();
+
+                    // Add glow effect
+                    if (particle.opacity > 0.6) {
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = config.particleColor;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    }
+                });
+            }
+
+            function animate(currentTime) {
+                animationId = requestAnimationFrame(animate);
+
+                const elapsed = currentTime - lastFrameTime;
+
+                if (elapsed < frameInterval) {
+                    return;
+                }
+
+                lastFrameTime = currentTime - (elapsed % frameInterval);
+
+                update();
+                draw();
+            }
+
+            function handleResize() {
+                if (resizeTimeout) {
+                    clearTimeout(resizeTimeout);
+                }
+
+                resizeTimeout = window.setTimeout(() => {
+                    setupCanvas();
+                    createParticles();
+                }, 250);
+            }
+
+            function stopAnimation() {
+                if (animationId !== null) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+            }
+
+            // Initialize
+            function init() {
+                setupCanvas();
+                createParticles();
+                animate(0);
+                window.addEventListener('resize', handleResize);
+
+                // Cleanup on page unload
+                window.addEventListener('beforeunload', () => {
+                    stopAnimation();
+                    window.removeEventListener('resize', handleResize);
+                });
+            }
+
+            // Start when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
     </script>
 </body>
 </html>
