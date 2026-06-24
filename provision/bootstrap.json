@@ -11,23 +11,48 @@
   "wss_port": 8089,
   "wss_url": "wss://192.168.1.80:8089/ws",
   "wss_url_lan": "wss://192.168.1.80:8089/ws",
+  "video_codecs": [
+    "vp8",
+    "h264"
+  ],
+  "ice_servers": [
+    {
+      "urls": [
+        "stun:192.168.1.80:3478"
+      ]
+    }
+  ],
   "vpn": {
     "enable": true,
-    "endpoint_remote": "143.105.152.186:51820",
+    "wireguard_remote_available": false,
+    "endpoint_remote": "",
     "endpoint_lan": "192.168.1.80:51820",
     "allowed_ips": "192.168.1.0/24,10.10.10.0/24,10.200.0.0/24"
+  },
+  "remote_access": {
+    "mode": "tailscale",
+    "tailscale": {
+      "subnet_routes": [
+        "192.168.1.0/24",
+        "10.10.10.0/24"
+      ],
+      "install": "https://tailscale.com/download",
+      "hint": "Même compte Tailscale que le PBX ; activer les routes subnet sur le téléphone"
+    }
   },
   "endpoints": {
     "register": "/api/v1/register.php",
     "verify": "/api/v1/verify.php",
     "claim": "/api/v1/claim.php",
     "reconnect": "/api/v1/reconnect.php",
+    "session": "/api/v1/session.php",
     "vpn_register": "/api/v1/vpn/register.php",
     "vpn_verify": "/api/v1/vpn/verify.php",
     "vpn_claim": "/api/v1/vpn/claim.php",
     "vpn_enroll": "/api/v1/vpn/enroll.php",
+    "vpn_revoke": "/api/v1/vpn/revoke.php",
     "vpn_status": "/api/v1/vpn/status.php"
   },
   "deeplink_scheme": "asaphone",
-  "notes": "sip_server / wss_url / api_lan_ip = IP DHCP sur VPN_LAN_IFACE. pbx_host = mDNS optionnel."
+  "notes": "4G/Starlink : Tailscale (pas WireGuard UDP). Wi-Fi site : WireGuard endpoint_lan ou LAN direct."
 }
